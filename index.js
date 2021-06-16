@@ -38,7 +38,7 @@ module.exports = function proxy(host, userOptions) {
       .then(resolveProxyReqPath)
       .then(decorateProxyReqBody)
       .then(prepareProxyReq)
-      .then(circuitBreaker(sendProxyRequest))
+      .then((container) => circuitBreaker(sendProxyRequest, container))
       //.then(sendProxyRequest)
       .then(maybeSkipToNextHandler)
       .then(copyProxyResHeadersToUserRes)
