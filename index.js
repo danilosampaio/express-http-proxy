@@ -29,6 +29,7 @@ module.exports = function proxy(host, userOptions) {
   return function handleProxy(req, res, next) {
     debug('[start proxy] ' + req.path);
     var container = new ScopeContainer(req, res, next, host, userOptions);
+    var circuitBreaker = userOptions.circuitBreaker || function() { return new Promise((resolve) => resolve()) };
 
     filterUserRequest(container)
       .then(buildProxyReq)
@@ -37,6 +38,7 @@ module.exports = function proxy(host, userOptions) {
       .then(resolveProxyReqPath)
       .then(decorateProxyReqBody)
       .then(prepareProxyReq)
+      .then(circuitBreaker)
       .then(sendProxyRequest)
       .then(maybeSkipToNextHandler)
       .then(copyProxyResHeadersToUserRes)
