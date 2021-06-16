@@ -1,6 +1,6 @@
 {
   "name": "express-http-proxy-circuit-breaker",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "fork of express-http-proxy with circuit breaker option",
   "engines": {
     "node": ">=6.0.0"
