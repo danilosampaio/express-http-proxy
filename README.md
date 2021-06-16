@@ -1,12 +1,12 @@
 # express-http-proxy [![NPM version](https://badge.fury.io/js/express-http-proxy.svg)](http://badge.fury.io/js/express-http-proxy) [![Build Status](https://travis-ci.org/villadora/express-http-proxy.svg?branch=master)](https://travis-ci.org/villadora/express-http-proxy) 
 
 
-Express middleware to proxy request to another host and pass response back to original caller.
+A fork of https://github.com/villadora/express-http-proxy with circuit breaker option.
 
 ## Install
 
 ```bash
-$ npm install express-http-proxy --save
+$ npm install express-http-proxy-circuit-breaker --save
 ```
 
 ## Usage

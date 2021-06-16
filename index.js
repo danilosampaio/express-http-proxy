@@ -23,13 +23,21 @@ var resolveProxyReqPath          = require('./app/steps/resolveProxyReqPath');
 var sendProxyRequest             = require('./app/steps/sendProxyRequest');
 var sendUserRes                  = require('./app/steps/sendUserRes');
 
+function defineCircuitBreaker(userOptions) {
+  if (userOptions && userOptions.circuitBreaker) {
+    return userOptions.circuitBreaker;
+  } else {
+    return function (fn, container) { return fn(container); };
+  }
+}
+
 module.exports = function proxy(host, userOptions) {
   assert(host, 'Host should not be empty');
 
   return function handleProxy(req, res, next) {
     debug('[start proxy] ' + req.path);
     var container = new ScopeContainer(req, res, next, host, userOptions);
-    var circuitBreaker = userOptions.circuitBreaker || function() { return sendProxyRequest };
+    var circuitBreaker = defineCircuitBreaker(userOptions);
 
     filterUserRequest(container)
       .then(buildProxyReq)
@@ -39,7 +47,6 @@ module.exports = function proxy(host, userOptions) {
       .then(decorateProxyReqBody)
       .then(prepareProxyReq)
       .then((container) => circuitBreaker(sendProxyRequest, container))
-      //.then(sendProxyRequest)
       .then(maybeSkipToNextHandler)
       .then(copyProxyResHeadersToUserRes)
       .then(decorateUserResHeaders)
